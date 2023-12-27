@@ -8,11 +8,18 @@ server.get('/', async (request, response) => {
   const page = await browser.newPage();
   await page.goto('https://www.ligapokemon.com.br/?view=cards/card&card=Iono%20(185/193)&ed=PAL&num=185');
 
+
+  const textSelector = await page.waitForSelector(
+        'Preço Médio cards com Extra: Reverse Foil'
+      );
+      const fullTitle = await textSelector?.evaluate(el => el.textContent);
+
+      console.log(fullTitle);
   const pageContent = await page.evaluate(() => {
     return{
       card_name: document.querySelector('.nome-principal').innerText,
       normal_price: document.querySelector('div.precos-edicoes .row.bloco-preco-superior div.col-prc.col-prc-menor').innerText,
-      foil_price: document.querySelector('div.col-prc.col-prc-menor').innerText,
+      foil_price: document.querySelector('div.precos-edicoes .row.bloco-preco-superior div.col-prc.col-prc-menor').innerText,
     }
   });
 
@@ -30,7 +37,7 @@ server.get('/', async (request, response) => {
 
 server.listen(3333, () => {
 
-  console.log('Server started at http://192.168.15.4:3333');
+  console.log('Server started at http://localhost:3333');
 });
 
 
